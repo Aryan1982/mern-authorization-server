@@ -3,7 +3,6 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const User = require('./models/usermodel')
 const jwt = require('jsonwebtoken')
-const cookieParser = require('cookie-parser');
 const app = express();
 require('dotenv').config();
 app.use(cors())
@@ -39,7 +38,7 @@ app.post("/api/register",async(req,res)=>{
 	        title:req.body.title,
 			content:req.body.content
 	    };
-
+	    // console.log(req)
 	    user.quote.push(newQuote);
 	    await user.save(); 
 		
@@ -56,11 +55,25 @@ app.post("/api/register",async(req,res)=>{
 		}						
 	})
 
-	app.get('/api/delete',(req,res)=>{
-		// const token = req.headers.authorization
-		// const decode = jwt.verify(token, 'secret123');
-		// const userId = decode.email
-		console.log('hey');
+	app.post('/api/delete',async(req,res)=>{
+		const token = req.headers.authorization
+		const decode = jwt.verify(token, 'secret123');
+		const userEmail = decode.email
+		const user=	await User.findOne({email:userEmail});
+
+		const userID = user._id.toString()
+		const quoteID = req.body.quoteid
+		// console.log(user._id.toString())
+		// console.log(quoteID)
+	// 	const userId = "641db6f52818dfa5a4f0b8db"; 
+	// 	const quoteId = "641dd7d7038681118e2d8ff3";
+
+	// 	// console.log(req.body.quoteid);
+
+		User.updateOne(
+	  	{ _id: userID },
+	  	{ $pull: { quote: { _id: quoteID } } }
+		).then(console.log('deleted'))
 	})
 
 	app.get('/api/allquotes',async(req,res)=>{
