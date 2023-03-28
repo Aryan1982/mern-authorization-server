@@ -76,6 +76,20 @@ app.post("/api/register",async(req,res)=>{
 		).then(console.log('deleted'))
 	})
 
+
+	app.post('/api/update',async(req,res)=>{
+		const token = req.headers.authorization
+		const decode = jwt.verify(token, 'secret123');
+		const userEmail = decode.email
+
+		const quoteID = req.body.quoteid
+			User.findOneAndUpdate(
+		  { email: userEmail, "quote._id": quoteID },
+		  { $set: { "quote.$.title": req.body.title,"quote.$.content":req.body.content } },
+		  { new: true }
+		).then(console.log("done"))
+	});
+
 	app.get('/api/allquotes',async(req,res)=>{
 		const token = req.headers.authorization
 		// console.log(token)
@@ -85,11 +99,6 @@ app.post("/api/register",async(req,res)=>{
 				res.json(user.quote)
 		})
 		}
-		
-		// console.log(user)
-		// const data = User.find()
-		// const entries = Object.keys(data)
-		// res.send(data['schema'].obj.quote)
 	})
 
 	app.post("/api/login",async(req,res)=>{
