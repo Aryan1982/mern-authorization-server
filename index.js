@@ -55,7 +55,6 @@ app.post("/api/register",async(req,res)=>{
 			res.send(decode)
 		}						
 	})
-
 	app.get('/api/allquotes',async(req,res)=>{
 		const token = req.headers.authorization
 		// console.log(token)
