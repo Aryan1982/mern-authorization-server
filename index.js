@@ -24,7 +24,7 @@ app.post("/api/register",async(req,res)=>{
 		res.json({status:'ok'})
 		// console.log(user)
 	} catch(err){
-		res.json({status:'error', error:'Duplicate email'})
+		res.json({status:'error', error:'Email already registered'})
 	}
 })
 
